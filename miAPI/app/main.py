@@ -87,7 +87,7 @@ async def actualizar_usuario(id: int, usuario_actualizado: dict):
 
 
 #delete
-@app.delete("/V1/usuarios/", tags=['CRUD HTTP'], status_code=status.HTTP_200)
+@app.delete("/V1/usuarios/", tags=['CRUD HTTP'], status_code=status.HTTP_200_OK)
 async def eliminar_usuario(id:int):
     for usuario in usuarios:
         if usuario["id"] == id:
