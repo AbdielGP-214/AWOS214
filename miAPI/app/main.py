@@ -2,6 +2,7 @@
 from fastapi import FastAPI,status,HTTPException
 import asyncio
 from typing import Optional
+from pydantic import BaseModel,Field
 
 
 #Zona de Instancias del servidor
@@ -16,6 +17,14 @@ usuarios=[
     {"id":2,"nombre":"Israel","edad":20},
     {"id":3,"nombre":"Sofi","edad":21},
 ]
+
+#Modelo de validacion Pydantic
+class usuario_create(BaseModel):
+    id: int = Field(...,gt=0, description="Identificador de usuario")
+    nombre:str= Field(..., min_length=3,max_length=50,example="Juanita")
+    edad: int= Field(..., ge=1, le=123,description="Edad valida entre 1 y 123")
+
+
 
 #Zona de Endpoints
 @app.get("/",tags=['Inicio'])
@@ -57,9 +66,9 @@ async def leer_usuarios():
 
 #post
 @app.post("/v1/usuarios/",tags=['CRUD HTTP'],status_code=status.HTTP_201_CREATED)
-async def crear_usuario(usuario:dict):
+async def crear_usuario(usuario:usuario_create):
     for usr in usuarios:
-        if usr["id"] == usuario.get("id"):
+        if usr["id"] == usuario.id:
             raise HTTPException(
                 status_code=400,
                 detail="El id ya existe"
