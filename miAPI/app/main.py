@@ -1,8 +1,10 @@
 #Zona de Importaciones
 from fastapi import FastAPI
 from app.routers import usuarios,varios
+from app.database.db import engine
+from app.database import usuario 
 
-
+usuario.Base.metadata.create_all(bind=engine)
 
 
 
